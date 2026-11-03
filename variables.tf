@@ -11,10 +11,15 @@ variable "instance_type" {
 
 variable "ssh_cidr" {
   type        = string
-  description = "My public IP in CIDR notation, e.g. 1.2.3.4/32"
+  description = "Public IP allowed to SSH, in CIDR notation, e.g. 1.2.3.4/32"
 
   validation {
     condition     = can(cidrhost(var.ssh_cidr, 0))
-    error_message = "my_ip must be a valid CIDR, e.g. 1.2.3.4/32."
+    error_message = "ssh_cidr must be a valid CIDR, e.g. 1.2.3.4/32."
+  }
+
+  validation {
+    condition     = var.ssh_cidr != "0.0.0.0/0"
+    error_message = "ssh_cidr must not be 0.0.0.0/0, that opens SSH to the whole internet."
   }
 }
