@@ -1,28 +1,3 @@
-terraform {
-  required_version = "~> 1.16"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.6"
-    }
-  }
-}
-#Sets region and tags for EVERY resource launched by AWS (but ASG)
-provider "aws" {
-  region = var.region
-
-  default_tags {
-    tags = {
-      Project   = "terraform-learning"
-      Owner     = "dmytro"
-      ManagedBy = "terraform"
-    }
-  }
-}
 #Creates random 4 bytes id
 resource "random_id" "bucket_suffix" {
   byte_length = 4
@@ -97,7 +72,7 @@ resource "aws_security_group" "ec2_sg" {
 
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh_ipv4" {
   security_group_id = aws_security_group.ec2_sg.id
-  cidr_ipv4         = var.ip
+  cidr_ipv4         = var.ssh_cidr
   from_port         = 22
   ip_protocol       = "tcp"
   to_port           = 22
